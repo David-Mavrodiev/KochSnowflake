@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <style>
+            body {
+                margin: 0;
+            }
+            .grid {
+                display: flex;
+                flex: 1 1 0;
+            }
+            canvas {
+                flex: 1 0 0;
+                background-color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="grid">
+            <canvas id="canvas-id" width="600" height="400"></canvas>
+        </div>
+        <script>
+            function drawKoch(ctx, ax, ay, bx, by, level) {
+                if (level === 0) {
+                    ctx.fillStyle = "white";
+                    ctx.strokeStyle = "white";
+                    ctx.moveTo(ax, ay);
+                    ctx.lineTo(bx, by);
+                } else {
+                    var sx = bx - ax;
+                    var sy = by - ay;
+
+                    var x1 = ax + sx / 3;
+                    var y1 = ay + sy / 3;
+
+                    var x2 = 0.5 * (ax + bx) + Math.sqrt(3) * (ay - by) / 6;
+                    var y2 = 0.5 * (ay + by) + Math.sqrt(3) * (bx - ax) / 6;
+
+                    var x3 = ax + 2 * sx / 3;
+                    var y3 = ay + 2 * sy / 3;
+
+                    drawKoch(ctx, ax, ay, x1, y1, level - 1);
+                    drawKoch(ctx, x1, y1, x2, y2, level - 1);
+                    drawKoch(ctx, x2, y2, x3, y3, level - 1);
+                    drawKoch(ctx, x3, y3, bx, by, level - 1);
+                }
+            }
+
+            function drawSnowflake() {
+                var canvas = document.getElementById('canvas-id');
+                if (canvas.getContext) {
+                    var ctx = canvas.getContext('2d');
+                    ctx.beginPath();
+                    drawKoch(ctx, 150, 300, 450, 300, 4);
+                    drawKoch(ctx, 450, 300, 300, 50, 4);
+                    drawKoch(ctx, 300, 50, 150, 300, 4);
+                    ctx.stroke();
+                }
+            }
+
+            drawSnowflake();
+        </script>
+    </body>
+</html>
